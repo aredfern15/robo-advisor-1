@@ -6,6 +6,8 @@ import os
 
 import requests
 from dotenv import load_dotenv 
+#Date and Time from https://www.programiz.com/python-programming/datetime/current-datetime
+from datetime import datetime  
 
 load_dotenv()
 
@@ -66,11 +68,18 @@ with open(csv_file_path, "w") as csv_file: # "w" means "open the file for writin
             "close": daily_prices["4. close"],
             "volume": daily_prices["5. volume"]    
         })
+
+# using now() to get current time  
+now = datetime.now()
+#print("now =", now)
+
+dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
+
 print("-------------------------")
 print("SELECTED SYMBOL: IBM")
 print("-------------------------")
 print("REQUESTING STOCK MARKET DATA")
-print("REQUEST AT: 2018-02-20 02:00pm") #day time module, do on your own
+print("REQUEST AT: ",dt_string) #day time module, do on your own
 print("-------------------------")
 print(f"LATEST DAY: {last_refreshed}")
 print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
@@ -86,4 +95,7 @@ print("HAPPY INVESTING!")
 print("-------------------------")
 
 
+
+
+    
 
