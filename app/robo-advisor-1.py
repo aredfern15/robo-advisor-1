@@ -5,12 +5,18 @@ import json
 import os
 
 import requests
+from dotenv import load_dotenv 
 
+load_dotenv()
 
 def to_usd(my_price):
     return "${0:,.2f}".format(my_price)
 
 #INFO INPUTS
+
+api_key = os.environ.get("ALPHAVANTAGE_API_KEY") 
+
+symbol = "IBM" #TODO: accept user input
 
 request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo"
 
@@ -71,8 +77,8 @@ print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
 print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print(f"RECENT LOW: {to_usd(float(recent_low))}")
 print("-------------------------")
-print("RECOMMENDATION: BUY!") 
-print("RECOMMENDATION REASON: TODO")
+print("RECOMMENDATION: BUY!") #do on your own 
+print("RECOMMENDATION REASON: TODO") #do on your own 
 print("-------------------------") 
 print("WRITING DATA TO CSV... {csv_file_path}")
 print("-------------------------")
