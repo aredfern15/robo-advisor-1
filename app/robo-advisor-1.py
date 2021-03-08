@@ -22,6 +22,7 @@ symbol = "IBM" #TODO: accept user input
 
 request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo"
 
+
 response = requests.get(request_url)
 
 parsed_response = json.loads(response.text)
@@ -34,7 +35,7 @@ dates = list(tsd.keys())
 
 latest_day = dates[0]
 
-latest_close =  tsd[latest_day]["4. close"]#> 1,000,000
+latest_close =  float(tsd[latest_day]["4. close"])#> 1,000,000
 
 high_prices =[]
 low_prices = []
@@ -75,6 +76,20 @@ now = datetime.now()
 
 dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
 
+#rec_choice 
+a = latest_close
+b = recent_low
+
+if a <= (1.15 * b):
+    rec_choice = "Buy!"
+    rec_reason = "We recommend buying now because the stock's latest closing price is less than or equal to 20 percent above its recent low."
+
+else: 
+    rec_choice = "Don't buy!"
+    rec_reason = "We recommend not buying now because stock's latest closing price is more than 20 percent above its recent low."
+
+
+
 print("-------------------------")
 print("SELECTED SYMBOL: IBM")
 print("-------------------------")
@@ -86,16 +101,12 @@ print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
 print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print(f"RECENT LOW: {to_usd(float(recent_low))}")
 print("-------------------------")
-print("RECOMMENDATION: BUY!") #do on your own 
-print("RECOMMENDATION REASON: TODO") #do on your own 
+print(f"RECOMMENDATION: {rec_choice}") #do on your own 
+print(f"RECOMMENDATION REASON: {rec_reason}") #do on your own 
 print("-------------------------") 
 print("WRITING DATA TO CSV... {csv_file_path}")
 print("-------------------------")
 print("HAPPY INVESTING!")
 print("-------------------------")
 
-
-
-
-    
 
