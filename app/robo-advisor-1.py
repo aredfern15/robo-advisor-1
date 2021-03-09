@@ -1,36 +1,79 @@
 # this is the "app/robo_advisor.py" file
+#had help from Professor Rossetti's screencast, Nolan Matsko, and Annabelle Zebrowski 
 
+#imports needed for robo advisor
 import csv
 import json
 import os
-
 import requests
 from dotenv import load_dotenv 
-#Date and Time from https://www.programiz.com/python-programming/datetime/current-datetime
-from datetime import datetime  
 
 load_dotenv()
 
+#Date and Time from https://www.programiz.com/python-programming/datetime/current-datetime
+from datetime import datetime  
+
+#using now() to get current time  
+now = datetime.now()
+#print("now =", now)
+
+dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
+#for price formatting throughout the entire thing
+
+#price for USD
 def to_usd(my_price):
     return "${0:,.2f}".format(my_price)
 
+
 #INFO INPUTS
+#worked with Nolan Matsko and Annabelle Zebrowski 
+#checking if ticker is there
+ticker = input("Please enter the stock ticker that you would like to evaluate:")
 
+if len(ticker) >1 or len(ticker) <= 5: 
+    pass
+else: 
+    print("Oops, you have entered an invalid stock ticker. Please try again with a symbol such as 'IBM'.")
+    exit()
+
+#check if ticker has a number
+#helped by https://stackoverflow.com/questions/19859282/check-if-a-string-contains-a-number
+
+ticker_digits = False 
+
+for tickers in ticker: 
+    if tickers.isdigit(): 
+        ticker_digits = True
+
+if ticker_digits == False: 
+    pass
+else:
+    print("Oops, you have entered an invalid stock ticker with a digit. Please try again with a symbol such as 'IBM'.")
+    exit()
+
+
+symbol = ticker
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY") 
-
-symbol = "IBM" #TODO: accept user input
-
-request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo"
-
+request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={api_key}"
+#print("URL:", request_url)
 
 response = requests.get(request_url)
-
 parsed_response = json.loads(response.text)
 
-last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 
+
+#help about checking if a key is in a JSON array 
+#help came from Robert LUgo on https://stackoverflow.com/questions/24898797/check-if-key-exists-and-iterate-the-json-array-using-python
+
+try:
+    last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+except:
+    print("Oops, the stock you entered does not exist. Please try again with a symbol such as 'IBM'.")
+    exit()
+
+
+#last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 tsd = parsed_response["Time Series (Daily)"]
-
 dates = list(tsd.keys())
 
 latest_day = dates[0]
@@ -70,11 +113,6 @@ with open(csv_file_path, "w") as csv_file: # "w" means "open the file for writin
             "volume": daily_prices["5. volume"]    
         })
 
-# using now() to get current time  
-now = datetime.now()
-#print("now =", now)
-
-dt_string = now.strftime("%m/%d/%Y %H:%M:%S")
 
 #rec_choice 
 a = latest_close
@@ -82,27 +120,27 @@ b = recent_low
 
 if a <= (1.15 * b):
     rec_choice = "Buy!"
-    rec_reason = "We recommend buying now because the stock's latest closing price is less than or equal to 20 percent above its recent low."
+    rec_reason = "Buy! The stock's latest closing price is less than or equal to 15 percent above its recent low."
 
 else: 
     rec_choice = "Don't buy!"
-    rec_reason = "We recommend not buying now because stock's latest closing price is more than 20 percent above its recent low."
+    rec_reason = "Don't buy! The stock's latest closing price is more than 15 percent above its recent low."
 
 
 
 print("-------------------------")
-print("SELECTED SYMBOL: IBM")
+print(f"SELECTED SYMBOL: {symbol}")
 print("-------------------------")
 print("REQUESTING STOCK MARKET DATA")
-print("REQUEST AT: ",dt_string) #day time module, do on your own
+print("REQUEST AT: ",dt_string)
 print("-------------------------")
 print(f"LATEST DAY: {last_refreshed}")
 print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
 print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print(f"RECENT LOW: {to_usd(float(recent_low))}")
 print("-------------------------")
-print(f"RECOMMENDATION: {rec_choice}") #do on your own 
-print(f"RECOMMENDATION REASON: {rec_reason}") #do on your own 
+print(f"RECOMMENDATION: {rec_choice}")  
+print(f"RECOMMENDATION REASON: {rec_reason}") 
 print("-------------------------") 
 print("WRITING DATA TO CSV... {csv_file_path}")
 print("-------------------------")
