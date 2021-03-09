@@ -27,8 +27,8 @@ def to_usd(my_price):
 
 #INFO INPUTS
 #worked with Nolan Matsko and Annabelle Zebrowski 
-#checking if ticker is there
-ticker = input("Please enter the stock ticker that you would like to evaluate:")
+#checking if ticker has a valid number of characters
+ticker = input("Please enter the stock ticker that you would like to evaluate: ")
 
 if len(ticker) >1 or len(ticker) <= 5: 
     pass
@@ -37,9 +37,8 @@ else:
     exit()
 
 #check if ticker has a number
-#helped by https://stackoverflow.com/questions/19859282/check-if-a-string-contains-a-number
+#helped by olisteadman on https://stackoverflow.com/questions/19859282/check-if-a-string-contains-a-number
 
-ticker_digits = False 
 
 for tickers in ticker: 
     if tickers.isdigit(): 
@@ -61,7 +60,7 @@ response = requests.get(request_url)
 parsed_response = json.loads(response.text)
 
 
-
+#check if ticker exists
 #help about checking if a key is in a JSON array 
 #help came from Robert LUgo on https://stackoverflow.com/questions/24898797/check-if-key-exists-and-iterate-the-json-array-using-python
 
@@ -132,7 +131,7 @@ print("-------------------------")
 print(f"SELECTED SYMBOL: {symbol}")
 print("-------------------------")
 print("REQUESTING STOCK MARKET DATA")
-print("REQUEST AT: ",dt_string)
+print(f"REQUEST AT: {dt_string}")
 print("-------------------------")
 print(f"LATEST DAY: {last_refreshed}")
 print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
@@ -142,7 +141,7 @@ print("-------------------------")
 print(f"RECOMMENDATION: {rec_choice}")  
 print(f"RECOMMENDATION REASON: {rec_reason}") 
 print("-------------------------") 
-print("WRITING DATA TO CSV... {csv_file_path}")
+print(f"WRITING DATA TO CSV... {csv_file_path}")
 print("-------------------------")
 print("HAPPY INVESTING!")
 print("-------------------------")
