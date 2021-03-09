@@ -37,8 +37,9 @@ else:
     exit()
 
 #check if ticker has a number
-#helped by olisteadman on https://stackoverflow.com/questions/19859282/check-if-a-string-contains-a-number
+#helped by olisteadman https://stackoverflow.com/questions/19859282/check-if-a-string-contains-a-number
 
+ticker_digits = False 
 
 for tickers in ticker: 
     if tickers.isdigit(): 
